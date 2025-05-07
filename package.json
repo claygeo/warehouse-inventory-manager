@@ -1,0 +1,54 @@
+{
+  "name": "inventory-manager",
+  "version": "1.0.0",
+  "description": "Inventory Management System with Supabase Sync",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "author": "Your Organization",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dotenv": "^16.4.7",
+    "electron-store": "^8.1.0",
+    "flatpickr": "^4.6.13",
+    "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "electron": "^22.3.5",
+    "electron-builder": "^24.4.0"
+  },
+  "build": {
+    "appId": "com.organization.inventory-manager",
+    "productName": "Inventory Manager",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "src/assets/app-icon.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "src/assets/app-icon.icns"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "src/assets/app-icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
+  }
+}
