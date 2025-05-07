@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://hxzcihdozbbbirqhgzyw.supabase.co;">
+  <title>Inventory Manager</title>
+  <link href="../styles.css" rel="stylesheet">
+</head>
+<body class="h-screen flex flex-col">
+  <!-- Header -->
+  <header class="bg-white shadow-md p-4 flex justify-between items-center border-b-2 border-transparent [box-shadow:0_2px_0_0] [box-shadow:linear-gradient(to_right,#34d399,#3b82f6)]">
+    <div class="flex items-center">
+      <img src="./assets/curaleaf.png" alt="Curaleaf Logo" class="h-10 mr-4">
+      <h1 class="text-xl font-bold text-gray-800">Inventory Manager</h1>
+    </div>
+    <div class="flex items-center">
+      <!-- This will be dynamically updated by renderer.js -->
+    </div>
+  </header>
+
+  <!-- Welcome Banner -->
+  <div id="welcome-banner" class="hidden fixed inset-0 bg-gray-900/50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md text-center fade-in">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Welcome to Inventory Manager!</h2>
+      <p class="text-gray-600 mb-6">Click a button to get started.</p>
+      <button id="welcome-dismiss" class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600">Got it</button>
+    </div>
+  </div>
+
+  <div id="dashboard" class="relative flex-1 p-8">
+    <!-- Top-Left Corner: Core Operations (Blue) -->
+    <div class="absolute top-6 left-6 z-10">
+      <div class="bg-blue-200 text-blue-800 text-sm font-semibold px-3 py-1 rounded-lg mb-2 text-center">Core Operations</div>
+      <div class="flex flex-col space-y-4">
+        <div class="flex space-x-4">
+          <button data-section="transfer-in-out" class="group bg-blue-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-blue-600 hover:shadow-sm hover:scale-105 active:scale-95 transition duration-200 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m-12 5h12m-4 4l4-4m-4 4l4 4"></path></svg>
+            Transfer In/Out
+            <span class="tooltip">Move inventory between locations</span>
+          </button>
+          <button data-section="transaction-updates" class="group bg-blue-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-blue-600 hover:shadow-sm hover:scale-105 active:scale-95 transition duration-200 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012 portafolio-2h2a2 2 0 012 2"></path></svg>
+            Transaction Updates
+            <span class="tooltip">Update transaction details</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top-Right Corner: Staging (Green) -->
+    <div class="absolute top-6 right-6 z-10">
+      <div class="bg-green-200 text-green-800 text-sm font-semibold px-3 py-1 rounded-lg mb-2 text-center">Staging</div>
+      <div class="flex flex-col space-y-4">
+        <div class="flex space-x-4">
+          <button data-section="staging-request" class="group bg-green-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-green-600 hover:shadow-sm hover:scale-105 active:scale-95 transition duration-200 focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-≥2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01m-.01 4h.01"></path></svg>
+            Staging Request
+            <span class="tooltip">Request staging for products</span>
+          </button>
+          <button data-section="staging-updates" class="group bg-green-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-green-600 hover:shadow-sm hover:scale-105 active:scale-95 transition duration-200 focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+            Staging Updates
+            <span class="tooltip">Update batch information for staging</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom-Left Corner: Inventory (Purple) -->
+    <div class="absolute bottom-6 left-6 z-10">
+      <div class="bg-purple-200 text-purple-800 text-sm font-semibold px-3 py-1 rounded-lg mb-2 text-center">Inventory</div>
+      <div class="flex flex-col space-y-4">
+        <div class="flex space-x-4">
+          <button data-section="inventory-display" class="group bg-purple-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-purple-600 hover:shadow-sm hover:scale-105 active:scale-95 transition duration-200 focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+            <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+            Inventory Display
+            <span class="tooltip">View and update inventory levels</span>
+          </button>
+          <button data-section="product-master" class="group bg-purple-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-purple-600 hover:shadow-sm hover:scale-105 active:scale-95 transition duration-200 focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+            <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            Product Master
+            <span class="tooltip">Manage product details</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom-Right Corner: Reports (Orange) -->
+    <div class="absolute bottom-6 right-6 z-10">
+      <div class="bg-orange-200 text-orange-800 text-sm font-semibold px-3 py-1 rounded-lg mb-2 text-center">Reports</div>
+      <div class="flex flex-col space-y-4">
+        <div class="flex space-x-4">
+          <button data-section="reports" class="group bg-orange-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-orange-600 hover:shadow-sm hover:scale-105 active:scale-95 transition duration-200 focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+            <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            Reports
+            <span class="tooltip">Generate inventory reports</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: Logo, Warning Message, and Sync Button -->
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center z-20 max-w-md">
+      <img src="./assets/curaleaf.png" alt="Curaleaf Logo" class="max-w-[20vw] max-h-[20vh] mb-4 shadow-lg rounded-lg fade-in-bounce">
+      <div role="alert" class="bg-red-100/50 rounded-lg px-4 py-2 text-center drop-shadow-md">
+        <p class="text-xl bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent font-semibold">Warning: Unauthorized access is prohibited.</p>
+        <p class="text-md bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent">Advertencia: El acceso no autorizado está prohibido.</p>
+      </div>
+      <!-- Sync Now Button Container with yellow color -->
+      <div id="sync-button-container" class="mt-6 z-30"></div>
+    </div>
+  </div>
+
+  <div id="content" class="hidden flex-1 flex flex-col items-center justify-center fade-in">
+    <!-- Login Container -->
+    <div id="login-container" class="hidden w-full max-w-md">
+      <div class="flex items-center justify-center h-full bg-gray-100">
+        <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+          <div class="flex justify-center mb-6">
+            <img src="./assets/curaleaf.png" alt="Curaleaf Logo" class="h-16">
+          </div>
+          <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Inventory Manager Login</h2>
+          <div class="space-y-4">
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700 required">Email</label>
+              <input type="email" id="email" class="border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your email" required>
+            </div>
+            <div>
+              <label for="password" class="block text-sm font-medium text-gray-700 required">Password</label>
+              <input type="password" id="password" class="border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your password" required>
+            </div>
+            <div class="flex space-x-4 justify-center">
+              <button id="login-btn" class="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition duration-200">Login</button>
+              <button id="signup-btn" class="bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition duration-200">Sign Up</button>
+            </div>
+          </div>
+          <div id="auth-message" class="mt-4 text-center text-sm"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Container -->
+    <div id="form-container" class="hidden form-container w-full max-w-5xl px-4">
+      <h2 id="content-title" class="text-xl font-bold mb-6 text-center"></h2>
+      <div id="content-body"></div>
+      <div class="mt-6 flex space-x-4 justify-center">
+        <button class="btn-primary relative">
+          <span id="submit-text">Submit</span>
+          <span id="submit-spinner" class="hidden absolute inset-0 flex items-center justify-center">
+            <div class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+          </span>
+        </button>
+        <button class="btn-secondary">Clear</button>
+        <button class="btn-back">Back to Dashboard</button>
+      </div>
+    </div>
+    <div id="message" class="mt-4 text-center text-sm"></div>
+  </div>
+
+  <!-- Add CSS for notifications and table styling -->
+  <style>
+    .fade-in-scale {
+      animation: fadeInScale 0.3s ease-in-out forwards;
+    }
+    
+    .fade-out {
+      animation: fadeOut 0.3s ease-in-out forwards;
+    }
+    
+    @keyframes fadeInScale {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    
+    /* Table styling improvements */
+    #inventory-table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    #inventory-table th,
+    #inventory-table td {
+      padding: 8px;
+      text-align: center;
+      border: 1px solid #e5e7eb;
+    }
+    
+    #inventory-table th {
+      position: sticky;
+      top: 0;
+      background-color: #f3e8ff;
+      z-index: 10;
+      font-weight: 600;
+    }
+    
+    #inventory-table tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+    
+    #inventory-table tr:hover {
+      background-color: #eef2ff;
+    }
+    
+    /* Form styling improvements */
+    input, select {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.375rem;
+      padding: 0.5rem 0.75rem;
+      width: 100%;
+    }
+    
+    input:focus, select:focus {
+      outline: none;
+      border-color: #6b46c1;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+    }
+    
+    label.required:after {
+      content: "*";
+      color: #ef4444;
+      margin-left: 2px;
+    }
+    
+    /* Button styling improvements */
+    .btn-primary {
+      background-color: #8b5cf6;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary:hover {
+      background-color: #7c3aed;
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary {
+      background-color: #f59e0b;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #d97706;
+      transform: translateY(-1px);
+    }
+    
+    .btn-back {
+      background-color: #6b7280;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    
+    .btn-back:hover {
+      background-color: #4b5563;
+      transform: translateY(-1px);
+    }
+  </style>
+
+  <script src="renderer.js" defer></script>
+</body>
+</html>
